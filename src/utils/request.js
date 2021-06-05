@@ -6,6 +6,7 @@ import config from '../config'
 import { ElMessage } from 'element-plus'
 import router from '../router'
 import defaultValue from '../utils/defaultValue'
+import { getToken } from '../utils/auth'
 
 const services = axios.create({
   baseURL: config.baseURL,
@@ -14,8 +15,8 @@ const services = axios.create({
 
 services.interceptors.request.use((req) => {
   // TODO 添加token头
-  if (!req.headers.Authorization) {
-    req.headers.Authorization = 'Bear Token'
+  if (!req.headers.authorization) {
+    req.headers.authorization = 'Bearer ' + getToken()
   }
   return req
 })
@@ -24,17 +25,28 @@ services.interceptors.response.use((res) => {
   const { code, data, msg } = res.data
   if (code === 200) {
     return data
-  } else if (code === 40001) {
-    ElMessage.error(defaultValue.TOKEN_INVALID)
+  } else if (code === 20001 || code === 50001) {
+    let message = ''
+    if (code === 20001) {
+      message = defaultValue.USER_ACCOUNT_ERROR
+    } else if (code === 50001) {
+      message = defaultValue.AUTH_ERROR
+    }
+    ElMessage.error(message)
     setTimeout(() => {
       router.push('/login')
     }, 1500)
-    return Promise.reject(defaultValue.TOKEN_INVALID)
+    return Promise.reject(message)
   } else {
-    let message = msg || defaultValue.NETWORK_ERROR
+    let message = msg || defaultValue.BUSINESS_ERROR
     ElMessage.error(message)
     return Promise.reject(message)
   }
+}, (error) => {
+  let message = error.response.data.msg || defaultValue.BUSINESS_ERROR
+  // console.log({ ...error })∂
+  ElMessage.error(message)
+  return Promise.reject(message)
 })
 
 /**
@@ -48,6 +60,9 @@ function request(options) {
   options.method = options.method || 'get'
   if (options.method.toLocaleLowerCase() === 'get') {
     options.params = options.data
+  }
+  if (typeof options.mock !== undefined) {
+    config.mock = options.mock
   }
   if (config.env === 'prod') {
     services.defaults.baseURL = config.baseApi
