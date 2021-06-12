@@ -21,13 +21,57 @@ export default {
   noticeCount: () => {
     return request({
       url: '/leave/count',
+      mock: true
+    })
+  },
+  getMenuList: (data) => {
+    return request({
+      url: '/menu/list',
+      mock: false,
+      data
+    })
+  },
+  getUserList: (params) => {
+    return request({
+      url: '/user/list',
+      data: params,
       mock: false
     })
   },
-  getMenuList: () => {
+  userDelete: (data) => {
     return request({
-      url: '/menu/list',
+      url: '/user/delete',
+      method: 'post',
+      data,
+      mock: false
+    })
+  },
+  getRoleAllList: () => {
+    return request({
+      url: '/role/allList',
       mock: true
     })
-  }
+  },
+  getDeptList: () => {
+    return request({
+      url: '/dept/list',
+      mock: true
+    })
+  },
+  userSubmit: (data) => {
+    return request({
+      url: '/user/operate',
+      method: 'post',
+      data,
+      mock: false
+    })
+  },
+  menuSubmit: (data) => {
+    return request({
+      url: '/menu/operate',
+      method: 'post',
+      data,
+      mock: true
+    })
+  },
 }

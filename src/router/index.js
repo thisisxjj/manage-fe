@@ -20,22 +20,20 @@ const routes = [
         }
       },
       {
-        path: '/user',
+        path: '/system/user',
         name: 'User',
-        component: () => import('../views/Welcome.vue'),
+        component: () => import('../views/UserManage.vue'),
         meta: {
           title: '用户管理'
-        },
-        children: [
-          {
-            path: 'info',
-            name: 'UserInfo',
-            component: () => import('../views/Welcome.vue'),
-            meta: {
-              title: '信息统计'
-            }
-          }
-        ]
+        }
+      },
+      {
+        path: '/system/menu',
+        name: 'Menu',
+        component: () => import('../views/MenuManage.vue'),
+        meta: {
+          title: '菜单管理'
+        }
       }
     ]
   },

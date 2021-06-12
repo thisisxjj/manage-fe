@@ -38,12 +38,12 @@ services.interceptors.response.use((res) => {
     }, 1500)
     return Promise.reject(message)
   } else {
-    let message = msg || defaultValue.BUSINESS_ERROR
+    let message = msg && msg[0] || msg || defaultValue.BUSINESS_ERROR
     ElMessage.error(message)
     return Promise.reject(message)
   }
 }, (error) => {
-  let message = error.response.data.msg || defaultValue.BUSINESS_ERROR
+  let message = error.response && error.response.data.msg || error.message || defaultValue.BUSINESS_ERROR
   // console.log({ ...error })∂
   ElMessage.error(message)
   return Promise.reject(message)
@@ -61,13 +61,14 @@ function request(options) {
   if (options.method.toLocaleLowerCase() === 'get') {
     options.params = options.data
   }
+  let isMock = config.mock
   if (typeof options.mock !== undefined) {
-    config.mock = options.mock
+    isMock = options.mock
   }
   if (config.env === 'prod') {
     services.defaults.baseURL = config.baseApi
   } else {
-    services.defaults.baseURL = config.mock ? config.mockApi : config.baseApi
+    services.defaults.baseURL = isMock ? config.mockApi : config.baseApi
   }
   return services(options)
 }

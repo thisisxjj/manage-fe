@@ -14,4 +14,4 @@ console.log('环境变量 => ', app)
 app.config.globalProperties.$request = request
 app.config.globalProperties.$api = api
 app.config.globalProperties.$storage = storage
-app.use(ElementPlus).use(router).use(store).component('svg-icon', SvgIcon).mount('#app')
+app.use(ElementPlus, { size: 'small' }).use(router).use(store).component('svg-icon', SvgIcon).mount('#app')

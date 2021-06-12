@@ -53,9 +53,7 @@
         </div>
       </div>
       <div class="main-wrapper">
-        <div class="main-page">
-          <router-view></router-view>
-        </div>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -82,6 +80,11 @@ export default {
   mounted() {
     this.getMenuList()
     this.getNoticeCount()
+  },
+  watch: {
+    $route(to) {
+      this.activeMenu = to.fullPath
+    }
   },
   methods: {
     toggle() {
@@ -112,8 +115,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("../assets/style/reset.css");
-@import url("../assets/style/index.scss");
+@import "../assets/style/reset.css";
+@import "../assets/style/index.scss";
 .basic-page {
   position: relative;
   .nav-side {
@@ -186,10 +189,6 @@ export default {
       background-color: #eef0f3;
       padding: 20px;
       height: calc(100vh - 50px);
-      .main-page {
-        background-color: #fff;
-        height: 100%;
-      }
     }
   }
 }
