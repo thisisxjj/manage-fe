@@ -49,6 +49,7 @@
               @click="handleAdd(2, scope.row)"
               type="primary"
               size="mini"
+              v-if="scope.row.menuType !== 2"
             >
               新增
             </el-button>
@@ -90,6 +91,7 @@
             size="medium"
             style="width: 40%"
             placeholder="请选择所属部门"
+            @change="handleChange"
           />
           <span style="color: #aaa; margin-left: 20px">
             不选,则直接创建一级菜单
@@ -98,7 +100,14 @@
         <el-form-item label="菜单类型" prop="menuType">
           <el-radio-group v-model="menuDialogForm.menuType">
             <el-radio :label="1">菜单</el-radio>
-            <el-radio :label="2">按钮</el-radio>
+            <el-radio
+              :label="2"
+              :disabled="
+                menuDialogForm.parentId === null ||
+                menuDialogForm.parentId.length <= 1
+              "
+              >按钮</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="菜单名称" prop="menuName">
@@ -188,7 +197,13 @@ export default {
         },
         {
           label: '菜单类型',
-          prop: 'menuType'
+          prop: 'menuType',
+          formatter: (v1, v2, v3) => {
+            return {
+              1: '菜单',
+              2: '按钮'
+            }[v3]
+          }
         },
         {
           label: '权限标示',
@@ -222,7 +237,7 @@ export default {
       menuDialogForm: {
         menuType: 1,
         menuState: 1,
-        parentId: []
+        parentId: [null]
       },
       action: '',
       rules: {
@@ -276,6 +291,7 @@ export default {
     handleAdd(type, row) {
       this.showDialog = true
       this.action = 'add'
+      this.getAllMenuList()
       if (type === 2) {
         this.$nextTick(() => {
           this.menuDialogForm.parentId = [...row.parentId, row._id].filter((item) => item)
@@ -294,6 +310,7 @@ export default {
           _id,
           action: 'delete'
         })
+        this.getMenuList()
         this.$message({
           type: 'success',
           message: '删除成功'
@@ -310,6 +327,9 @@ export default {
     // 关闭弹窗
     handleClose() {
       this.handleReset('dialogForm')
+      this.$nextTick(() => {
+
+      })
     },
     // 提交
     handleSubmit() {
@@ -330,9 +350,19 @@ export default {
     handleEdit(row) {
       this.action = 'edit'
       this.showDialog = true
+      const obj = {}
+      // 避免响应式更新
+      Object.assign(obj, row)
       this.$nextTick(() => {
-        this.menuDialogForm = row
+        this.menuDialogForm = obj
       })
+    },
+    //级联选择器
+    handleChange() {
+      // 当parentID为空或者不为空且长度小于1
+      if (!this.menuDialogForm.parentId || this.menuDialogForm.parentId && this.menuDialogForm.parentId.length <= 1) {
+        this.menuDialogForm.menuType = 1
+      }
     }
   }
 }

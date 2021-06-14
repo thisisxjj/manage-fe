@@ -43,9 +43,9 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="email"
-                  >邮箱：{{ userInfo.email }}</el-dropdown-item
-                >
+                <el-dropdown-item command="email">
+                  邮箱：{{ userInfo.email }}
+                </el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
