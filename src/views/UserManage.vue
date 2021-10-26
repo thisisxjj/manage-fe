@@ -5,7 +5,6 @@
         :inline="true"
         ref="userForm"
         :model="userQueryForm"
-        class="demo-form-inline"
       >
         <el-form-item label="用户ID" prop="userId">
           <el-input
@@ -31,16 +30,28 @@
           <el-button type="primary" @click="handleQuery">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="default" @click="handleReset('userForm')"
-            >重置</el-button
-          >
+          <el-button type="default" @click="handleReset('userForm')">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleCreateUser">新增</el-button>
-        <el-button type="danger" @click="handlePatchDelete">批量删除</el-button>
+        <el-button
+          type="primary"
+          v-has:per="'user-create'"
+          @click="handleCreateUser"
+        >
+          新增
+        </el-button>
+        <el-button
+          type="danger"
+          v-has:per="'user-patch-delete'"
+          @click="handlePatchDelete"
+        >
+          批量删除
+        </el-button>
       </div>
       <el-table
         :data="userList"
@@ -58,12 +69,18 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <el-button @click="handleEdit(scope.row)" type="default" size="mini"
-              >编辑
+            <el-button
+              @click="handleEdit(scope.row)"
+              type="default"
+              size="mini"
+              v-has:per="'user-edit'"
+            >
+              编辑
             </el-button>
             <el-button
               type="danger"
               size="mini"
+              v-has:per="'user-delete'"
               @click="handleOneDelete(scope.row)"
               >删除</el-button
             >

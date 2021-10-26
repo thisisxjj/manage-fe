@@ -31,9 +31,15 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleAdd(1)">创建</el-button>
+        <el-button
+          type="primary"
+          v-has:per="'menu-create'"
+          @click="handleAdd(1)"
+        >
+          创建
+        </el-button>
       </div>
-      <el-table :data="menuList" style="width: 100%" row-key="_id" stripe>
+      <el-table :data="menuList" style="width: 100%" row-key="_id">
         <el-table-column
           v-for="item in columns"
           :key="item.prop"
@@ -49,6 +55,7 @@
               @click="handleAdd(2, scope.row)"
               type="primary"
               size="mini"
+              v-has:per="'menu-create'"
               v-if="scope.row.menuType !== 2"
             >
               新增
@@ -57,12 +64,14 @@
               @click="handleEdit(scope.row)"
               type="default"
               size="mini"
+              v-has:per="'menu-edit'"
             >
               编辑
             </el-button>
             <el-button
               type="danger"
               size="mini"
+              v-has:per="'menu-delete'"
               @click="handleDelete(scope.row._id)"
             >
               删除

@@ -4,7 +4,9 @@
       <!-- 系统LOGO -->
       <div class="logo">
         <img src="./../assets/logo.png" />
-        <span :style="isCollapse ? 'display:none' : ''">Manager</span>
+        <transition name="fade">
+          <span v-if="!isCollapse">Manager1</span>
+        </transition>
       </div>
       <!-- 导航菜单 -->
       <el-menu
@@ -84,6 +86,9 @@ export default {
   watch: {
     $route(to) {
       this.activeMenu = to.fullPath
+    },
+    '$store.state.user.menuList': function (newV) {
+      this.userMenu = newV
     }
   },
   methods: {
@@ -91,12 +96,7 @@ export default {
       this.isCollapse = !this.isCollapse
     },
     async getMenuList() {
-      try {
-        const userMenu = await this.$api.getMenuList()
-        this.userMenu = userMenu
-      } catch (error) {
-        console.error(error)
-      }
+      await this.$store.dispatch('user/savePermisMenuAction')
     },
     async getNoticeCount() {
       try {
@@ -117,6 +117,13 @@ export default {
 <style lang="scss">
 @import "../assets/style/reset.css";
 @import "../assets/style/index.scss";
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
 .basic-page {
   position: relative;
   .nav-side {
@@ -143,10 +150,12 @@ export default {
     // 合并
     &.fold {
       width: 64px;
+      transition: width 0.7s;
     }
     // 展开
     &.unfold {
       width: 200px;
+      transition: width 0.7s;
     }
   }
   .content-right {
@@ -154,10 +163,12 @@ export default {
     // 合并
     &.fold {
       margin-left: 64px;
+      transition: margin-left 0.7s;
     }
     // 展开
     &.unfold {
       margin-left: 200px;
+      transition: margin-left 0.7s;
     }
     .nav-top {
       height: 50px;
@@ -188,7 +199,7 @@ export default {
     .main-wrapper {
       background-color: #eef0f3;
       padding: 20px;
-      height: calc(100vh - 50px);
+      height: 100%;
     }
   }
 }

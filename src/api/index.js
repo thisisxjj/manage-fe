@@ -96,5 +96,11 @@ export default {
       data,
       mock: false
     })
-  }
+  },
+  getMenuPermissionList: (data) => {
+    return request({
+      url: '/user/permission/list',
+      mock: false
+    })
+  },
 }

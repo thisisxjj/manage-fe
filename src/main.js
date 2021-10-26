@@ -7,10 +7,13 @@ import 'element-plus/lib/theme-chalk/index.css'
 import request from './utils/request'
 import storage from './utils/storage'
 import api from './api'
+import hasPermissionDir from './directives/permission'
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import 'animate.css'
 
 const app = createApp(App)
 console.log('环境变量 => ', app)
+hasPermissionDir(app)
 app.config.globalProperties.$request = request
 app.config.globalProperties.$api = api
 app.config.globalProperties.$storage = storage
